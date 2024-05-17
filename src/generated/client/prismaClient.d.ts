@@ -24,6 +24,23 @@ export type Items = {
   task: string
   done: boolean
   created_at: Date
+  /**
+   * @zod.string.uuid()
+   */
+  list_id: string
+}
+
+/**
+ * Model Lists
+ * 
+ */
+export type Lists = {
+  /**
+   * @zod.string.uuid()
+   */
+  id: string
+  name: string
+  created_at: Date
 }
 
 
@@ -153,6 +170,16 @@ export class PrismaClient<
     * ```
     */
   get items(): Prisma.ItemsDelegate<GlobalReject>;
+
+  /**
+   * `prisma.lists`: Exposes CRUD operations for the **Lists** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Lists
+    * const lists = await prisma.lists.findMany()
+    * ```
+    */
+  get lists(): Prisma.ListsDelegate<GlobalReject>;
 }
 
 export namespace Prisma {
@@ -637,7 +664,8 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   }
 
   export const ModelName: {
-    Items: 'Items'
+    Items: 'Items',
+    Lists: 'Lists'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -802,6 +830,49 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
    */
 
 
+  /**
+   * Count Type ListsCountOutputType
+   */
+
+
+  export type ListsCountOutputType = {
+    items: number
+  }
+
+  export type ListsCountOutputTypeSelect = {
+    items?: boolean
+  }
+
+  export type ListsCountOutputTypeGetPayload<S extends boolean | null | undefined | ListsCountOutputTypeArgs> =
+    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
+    S extends true ? ListsCountOutputType :
+    S extends undefined ? never :
+    S extends { include: any } & (ListsCountOutputTypeArgs)
+    ? ListsCountOutputType 
+    : S extends { select: any } & (ListsCountOutputTypeArgs)
+      ? {
+    [P in TruthyKeys<S['select']>]:
+    P extends keyof ListsCountOutputType ? ListsCountOutputType[P] : never
+  } 
+      : ListsCountOutputType
+
+
+
+
+  // Custom InputTypes
+
+  /**
+   * ListsCountOutputType without action
+   */
+  export type ListsCountOutputTypeArgs = {
+    /**
+     * Select specific fields to fetch from the ListsCountOutputType
+     * 
+    **/
+    select?: ListsCountOutputTypeSelect | null
+  }
+
+
 
   /**
    * Models
@@ -823,6 +894,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     task: string | null
     done: boolean | null
     created_at: Date | null
+    list_id: string | null
   }
 
   export type ItemsMaxAggregateOutputType = {
@@ -830,6 +902,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     task: string | null
     done: boolean | null
     created_at: Date | null
+    list_id: string | null
   }
 
   export type ItemsCountAggregateOutputType = {
@@ -837,6 +910,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     task: number
     done: number
     created_at: number
+    list_id: number
     _all: number
   }
 
@@ -846,6 +920,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     task?: true
     done?: true
     created_at?: true
+    list_id?: true
   }
 
   export type ItemsMaxAggregateInputType = {
@@ -853,6 +928,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     task?: true
     done?: true
     created_at?: true
+    list_id?: true
   }
 
   export type ItemsCountAggregateInputType = {
@@ -860,6 +936,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     task?: true
     done?: true
     created_at?: true
+    list_id?: true
     _all?: true
   }
 
@@ -946,6 +1023,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     task: string
     done: boolean
     created_at: Date
+    list_id: string
     _count: ItemsCountAggregateOutputType | null
     _min: ItemsMinAggregateOutputType | null
     _max: ItemsMaxAggregateOutputType | null
@@ -970,19 +1048,28 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     task?: boolean
     done?: boolean
     created_at?: boolean
+    list_id?: boolean
+    lists?: boolean | ListsArgs
   }
 
+
+  export type ItemsInclude = {
+    lists?: boolean | ListsArgs
+  } 
 
   export type ItemsGetPayload<S extends boolean | null | undefined | ItemsArgs> =
     S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
     S extends true ? Items :
     S extends undefined ? never :
     S extends { include: any } & (ItemsArgs | ItemsFindManyArgs)
-    ? Items 
+    ? Items  & {
+    [P in TruthyKeys<S['include']>]:
+        P extends 'lists' ? ListsGetPayload<S['include'][P]> :  never
+  } 
     : S extends { select: any } & (ItemsArgs | ItemsFindManyArgs)
       ? {
     [P in TruthyKeys<S['select']>]:
-    P extends keyof Items ? Items[P] : never
+        P extends 'lists' ? ListsGetPayload<S['select'][P]> :  P extends keyof Items ? Items[P] : never
   } 
       : Items
 
@@ -1356,6 +1443,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
     readonly [Symbol.toStringTag]: 'PrismaClientPromise';
 
+    lists<T extends ListsArgs= {}>(args?: Subset<T, ListsArgs>): Prisma__ListsClient<ListsGetPayload<T> | Null>;
 
     private get _document();
     /**
@@ -1394,6 +1482,11 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     **/
     select?: ItemsSelect | null
     /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ItemsInclude | null
+    /**
      * Filter, which Items to fetch.
      * 
     **/
@@ -1422,6 +1515,11 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     **/
     select?: ItemsSelect | null
     /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ItemsInclude | null
+    /**
      * Filter, which Items to fetch.
      * 
     **/
@@ -1438,6 +1536,11 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      * 
     **/
     select?: ItemsSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ItemsInclude | null
     /**
      * Filter, which Items to fetch.
      * 
@@ -1502,6 +1605,11 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     **/
     select?: ItemsSelect | null
     /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ItemsInclude | null
+    /**
      * Filter, which Items to fetch.
      * 
     **/
@@ -1554,6 +1662,11 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     **/
     select?: ItemsSelect | null
     /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ItemsInclude | null
+    /**
      * Filter, which Items to fetch.
      * 
     **/
@@ -1600,6 +1713,11 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     **/
     select?: ItemsSelect | null
     /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ItemsInclude | null
+    /**
      * The data needed to create a Items.
      * 
     **/
@@ -1629,6 +1747,11 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      * 
     **/
     select?: ItemsSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ItemsInclude | null
     /**
      * The data needed to update a Items.
      * 
@@ -1669,6 +1792,11 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     **/
     select?: ItemsSelect | null
     /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ItemsInclude | null
+    /**
      * The filter to search for the Items to update in case it exists.
      * 
     **/
@@ -1695,6 +1823,11 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      * 
     **/
     select?: ItemsSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ItemsInclude | null
     /**
      * Filter which Items to delete.
      * 
@@ -1724,6 +1857,1010 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      * 
     **/
     select?: ItemsSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ItemsInclude | null
+  }
+
+
+
+  /**
+   * Model Lists
+   */
+
+
+  export type AggregateLists = {
+    _count: ListsCountAggregateOutputType | null
+    _min: ListsMinAggregateOutputType | null
+    _max: ListsMaxAggregateOutputType | null
+  }
+
+  export type ListsMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    created_at: Date | null
+  }
+
+  export type ListsMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    created_at: Date | null
+  }
+
+  export type ListsCountAggregateOutputType = {
+    id: number
+    name: number
+    created_at: number
+    _all: number
+  }
+
+
+  export type ListsMinAggregateInputType = {
+    id?: true
+    name?: true
+    created_at?: true
+  }
+
+  export type ListsMaxAggregateInputType = {
+    id?: true
+    name?: true
+    created_at?: true
+  }
+
+  export type ListsCountAggregateInputType = {
+    id?: true
+    name?: true
+    created_at?: true
+    _all?: true
+  }
+
+  export type ListsAggregateArgs = {
+    /**
+     * Filter which Lists to aggregate.
+     * 
+    **/
+    where?: ListsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Lists to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<ListsOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     * 
+    **/
+    cursor?: ListsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Lists from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Lists.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Lists
+    **/
+    _count?: true | ListsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ListsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ListsMaxAggregateInputType
+  }
+
+  export type GetListsAggregateType<T extends ListsAggregateArgs> = {
+        [P in keyof T & keyof AggregateLists]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateLists[P]>
+      : GetScalarType<T[P], AggregateLists[P]>
+  }
+
+
+
+
+  export type ListsGroupByArgs = {
+    where?: ListsWhereInput
+    orderBy?: Enumerable<ListsOrderByWithAggregationInput>
+    by: Array<ListsScalarFieldEnum>
+    having?: ListsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ListsCountAggregateInputType | true
+    _min?: ListsMinAggregateInputType
+    _max?: ListsMaxAggregateInputType
+  }
+
+
+  export type ListsGroupByOutputType = {
+    id: string
+    name: string
+    created_at: Date
+    _count: ListsCountAggregateOutputType | null
+    _min: ListsMinAggregateOutputType | null
+    _max: ListsMaxAggregateOutputType | null
+  }
+
+  type GetListsGroupByPayload<T extends ListsGroupByArgs> = PrismaPromise<
+    Array<
+      PickArray<ListsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ListsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ListsGroupByOutputType[P]>
+            : GetScalarType<T[P], ListsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ListsSelect = {
+    id?: boolean
+    name?: boolean
+    created_at?: boolean
+    items?: boolean | Lists$itemsArgs
+    _count?: boolean | ListsCountOutputTypeArgs
+  }
+
+
+  export type ListsInclude = {
+    items?: boolean | Lists$itemsArgs
+    _count?: boolean | ListsCountOutputTypeArgs
+  } 
+
+  export type ListsGetPayload<S extends boolean | null | undefined | ListsArgs> =
+    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
+    S extends true ? Lists :
+    S extends undefined ? never :
+    S extends { include: any } & (ListsArgs | ListsFindManyArgs)
+    ? Lists  & {
+    [P in TruthyKeys<S['include']>]:
+        P extends 'items' ? Array < ItemsGetPayload<S['include'][P]>>  :
+        P extends '_count' ? ListsCountOutputTypeGetPayload<S['include'][P]> :  never
+  } 
+    : S extends { select: any } & (ListsArgs | ListsFindManyArgs)
+      ? {
+    [P in TruthyKeys<S['select']>]:
+        P extends 'items' ? Array < ItemsGetPayload<S['select'][P]>>  :
+        P extends '_count' ? ListsCountOutputTypeGetPayload<S['select'][P]> :  P extends keyof Lists ? Lists[P] : never
+  } 
+      : Lists
+
+
+  type ListsCountArgs = Merge<
+    Omit<ListsFindManyArgs, 'select' | 'include'> & {
+      select?: ListsCountAggregateInputType | true
+    }
+  >
+
+  export interface ListsDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
+    /**
+     * Find zero or one Lists that matches the filter.
+     * @param {ListsFindUniqueArgs} args - Arguments to find a Lists
+     * @example
+     * // Get one Lists
+     * const lists = await prisma.lists.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends ListsFindUniqueArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, ListsFindUniqueArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'Lists'> extends True ? Prisma__ListsClient<ListsGetPayload<T>> : Prisma__ListsClient<ListsGetPayload<T> | null, null>
+
+    /**
+     * Find one Lists that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {ListsFindUniqueOrThrowArgs} args - Arguments to find a Lists
+     * @example
+     * // Get one Lists
+     * const lists = await prisma.lists.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends ListsFindUniqueOrThrowArgs>(
+      args?: SelectSubset<T, ListsFindUniqueOrThrowArgs>
+    ): Prisma__ListsClient<ListsGetPayload<T>>
+
+    /**
+     * Find the first Lists that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ListsFindFirstArgs} args - Arguments to find a Lists
+     * @example
+     * // Get one Lists
+     * const lists = await prisma.lists.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends ListsFindFirstArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, ListsFindFirstArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'Lists'> extends True ? Prisma__ListsClient<ListsGetPayload<T>> : Prisma__ListsClient<ListsGetPayload<T> | null, null>
+
+    /**
+     * Find the first Lists that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ListsFindFirstOrThrowArgs} args - Arguments to find a Lists
+     * @example
+     * // Get one Lists
+     * const lists = await prisma.lists.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends ListsFindFirstOrThrowArgs>(
+      args?: SelectSubset<T, ListsFindFirstOrThrowArgs>
+    ): Prisma__ListsClient<ListsGetPayload<T>>
+
+    /**
+     * Find zero or more Lists that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ListsFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Lists
+     * const lists = await prisma.lists.findMany()
+     * 
+     * // Get first 10 Lists
+     * const lists = await prisma.lists.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const listsWithIdOnly = await prisma.lists.findMany({ select: { id: true } })
+     * 
+    **/
+    findMany<T extends ListsFindManyArgs>(
+      args?: SelectSubset<T, ListsFindManyArgs>
+    ): PrismaPromise<Array<ListsGetPayload<T>>>
+
+    /**
+     * Create a Lists.
+     * @param {ListsCreateArgs} args - Arguments to create a Lists.
+     * @example
+     * // Create one Lists
+     * const Lists = await prisma.lists.create({
+     *   data: {
+     *     // ... data to create a Lists
+     *   }
+     * })
+     * 
+    **/
+    create<T extends ListsCreateArgs>(
+      args: SelectSubset<T, ListsCreateArgs>
+    ): Prisma__ListsClient<ListsGetPayload<T>>
+
+    /**
+     * Create many Lists.
+     *     @param {ListsCreateManyArgs} args - Arguments to create many Lists.
+     *     @example
+     *     // Create many Lists
+     *     const lists = await prisma.lists.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
+     *     
+    **/
+    createMany<T extends ListsCreateManyArgs>(
+      args?: SelectSubset<T, ListsCreateManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Lists.
+     * @param {ListsDeleteArgs} args - Arguments to delete one Lists.
+     * @example
+     * // Delete one Lists
+     * const Lists = await prisma.lists.delete({
+     *   where: {
+     *     // ... filter to delete one Lists
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends ListsDeleteArgs>(
+      args: SelectSubset<T, ListsDeleteArgs>
+    ): Prisma__ListsClient<ListsGetPayload<T>>
+
+    /**
+     * Update one Lists.
+     * @param {ListsUpdateArgs} args - Arguments to update one Lists.
+     * @example
+     * // Update one Lists
+     * const lists = await prisma.lists.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends ListsUpdateArgs>(
+      args: SelectSubset<T, ListsUpdateArgs>
+    ): Prisma__ListsClient<ListsGetPayload<T>>
+
+    /**
+     * Delete zero or more Lists.
+     * @param {ListsDeleteManyArgs} args - Arguments to filter Lists to delete.
+     * @example
+     * // Delete a few Lists
+     * const { count } = await prisma.lists.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends ListsDeleteManyArgs>(
+      args?: SelectSubset<T, ListsDeleteManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Lists.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ListsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Lists
+     * const lists = await prisma.lists.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends ListsUpdateManyArgs>(
+      args: SelectSubset<T, ListsUpdateManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Lists.
+     * @param {ListsUpsertArgs} args - Arguments to update or create a Lists.
+     * @example
+     * // Update or create a Lists
+     * const lists = await prisma.lists.upsert({
+     *   create: {
+     *     // ... data to create a Lists
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Lists we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends ListsUpsertArgs>(
+      args: SelectSubset<T, ListsUpsertArgs>
+    ): Prisma__ListsClient<ListsGetPayload<T>>
+
+    /**
+     * Count the number of Lists.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ListsCountArgs} args - Arguments to filter Lists to count.
+     * @example
+     * // Count the number of Lists
+     * const count = await prisma.lists.count({
+     *   where: {
+     *     // ... the filter for the Lists we want to count
+     *   }
+     * })
+    **/
+    count<T extends ListsCountArgs>(
+      args?: Subset<T, ListsCountArgs>,
+    ): PrismaPromise<
+      T extends _Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ListsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Lists.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ListsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ListsAggregateArgs>(args: Subset<T, ListsAggregateArgs>): PrismaPromise<GetListsAggregateType<T>>
+
+    /**
+     * Group by Lists.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ListsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ListsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ListsGroupByArgs['orderBy'] }
+        : { orderBy?: ListsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends TupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ListsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetListsGroupByPayload<T> : PrismaPromise<InputErrors>
+
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Lists.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export class Prisma__ListsClient<T, Null = never> implements PrismaPromise<T> {
+    [prisma]: true;
+    private readonly _dmmf;
+    private readonly _fetcher;
+    private readonly _queryType;
+    private readonly _rootField;
+    private readonly _clientMethod;
+    private readonly _args;
+    private readonly _dataPath;
+    private readonly _errorFormat;
+    private readonly _measurePerformance?;
+    private _isList;
+    private _callsite;
+    private _requestPromise?;
+    constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
+    readonly [Symbol.toStringTag]: 'PrismaClientPromise';
+
+    items<T extends Lists$itemsArgs= {}>(args?: Subset<T, Lists$itemsArgs>): PrismaPromise<Array<ItemsGetPayload<T>>| Null>;
+
+    private get _document();
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
+  }
+
+
+
+  // Custom InputTypes
+
+  /**
+   * Lists base type for findUnique actions
+   */
+  export type ListsFindUniqueArgsBase = {
+    /**
+     * Select specific fields to fetch from the Lists
+     * 
+    **/
+    select?: ListsSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ListsInclude | null
+    /**
+     * Filter, which Lists to fetch.
+     * 
+    **/
+    where: ListsWhereUniqueInput
+  }
+
+  /**
+   * Lists findUnique
+   */
+  export interface ListsFindUniqueArgs extends ListsFindUniqueArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * Lists findUniqueOrThrow
+   */
+  export type ListsFindUniqueOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the Lists
+     * 
+    **/
+    select?: ListsSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ListsInclude | null
+    /**
+     * Filter, which Lists to fetch.
+     * 
+    **/
+    where: ListsWhereUniqueInput
+  }
+
+
+  /**
+   * Lists base type for findFirst actions
+   */
+  export type ListsFindFirstArgsBase = {
+    /**
+     * Select specific fields to fetch from the Lists
+     * 
+    **/
+    select?: ListsSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ListsInclude | null
+    /**
+     * Filter, which Lists to fetch.
+     * 
+    **/
+    where?: ListsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Lists to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<ListsOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Lists.
+     * 
+    **/
+    cursor?: ListsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Lists from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Lists.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Lists.
+     * 
+    **/
+    distinct?: Enumerable<ListsScalarFieldEnum>
+  }
+
+  /**
+   * Lists findFirst
+   */
+  export interface ListsFindFirstArgs extends ListsFindFirstArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * Lists findFirstOrThrow
+   */
+  export type ListsFindFirstOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the Lists
+     * 
+    **/
+    select?: ListsSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ListsInclude | null
+    /**
+     * Filter, which Lists to fetch.
+     * 
+    **/
+    where?: ListsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Lists to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<ListsOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Lists.
+     * 
+    **/
+    cursor?: ListsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Lists from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Lists.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Lists.
+     * 
+    **/
+    distinct?: Enumerable<ListsScalarFieldEnum>
+  }
+
+
+  /**
+   * Lists findMany
+   */
+  export type ListsFindManyArgs = {
+    /**
+     * Select specific fields to fetch from the Lists
+     * 
+    **/
+    select?: ListsSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ListsInclude | null
+    /**
+     * Filter, which Lists to fetch.
+     * 
+    **/
+    where?: ListsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Lists to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<ListsOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Lists.
+     * 
+    **/
+    cursor?: ListsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Lists from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Lists.
+     * 
+    **/
+    skip?: number
+    distinct?: Enumerable<ListsScalarFieldEnum>
+  }
+
+
+  /**
+   * Lists create
+   */
+  export type ListsCreateArgs = {
+    /**
+     * Select specific fields to fetch from the Lists
+     * 
+    **/
+    select?: ListsSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ListsInclude | null
+    /**
+     * The data needed to create a Lists.
+     * 
+    **/
+    data: XOR<ListsCreateInput, ListsUncheckedCreateInput>
+  }
+
+
+  /**
+   * Lists createMany
+   */
+  export type ListsCreateManyArgs = {
+    /**
+     * The data used to create many Lists.
+     * 
+    **/
+    data: Enumerable<ListsCreateManyInput>
+    skipDuplicates?: boolean
+  }
+
+
+  /**
+   * Lists update
+   */
+  export type ListsUpdateArgs = {
+    /**
+     * Select specific fields to fetch from the Lists
+     * 
+    **/
+    select?: ListsSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ListsInclude | null
+    /**
+     * The data needed to update a Lists.
+     * 
+    **/
+    data: XOR<ListsUpdateInput, ListsUncheckedUpdateInput>
+    /**
+     * Choose, which Lists to update.
+     * 
+    **/
+    where: ListsWhereUniqueInput
+  }
+
+
+  /**
+   * Lists updateMany
+   */
+  export type ListsUpdateManyArgs = {
+    /**
+     * The data used to update Lists.
+     * 
+    **/
+    data: XOR<ListsUpdateManyMutationInput, ListsUncheckedUpdateManyInput>
+    /**
+     * Filter which Lists to update
+     * 
+    **/
+    where?: ListsWhereInput
+  }
+
+
+  /**
+   * Lists upsert
+   */
+  export type ListsUpsertArgs = {
+    /**
+     * Select specific fields to fetch from the Lists
+     * 
+    **/
+    select?: ListsSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ListsInclude | null
+    /**
+     * The filter to search for the Lists to update in case it exists.
+     * 
+    **/
+    where: ListsWhereUniqueInput
+    /**
+     * In case the Lists found by the `where` argument doesn't exist, create a new Lists with this data.
+     * 
+    **/
+    create: XOR<ListsCreateInput, ListsUncheckedCreateInput>
+    /**
+     * In case the Lists was found with the provided `where` argument, update it with this data.
+     * 
+    **/
+    update: XOR<ListsUpdateInput, ListsUncheckedUpdateInput>
+  }
+
+
+  /**
+   * Lists delete
+   */
+  export type ListsDeleteArgs = {
+    /**
+     * Select specific fields to fetch from the Lists
+     * 
+    **/
+    select?: ListsSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ListsInclude | null
+    /**
+     * Filter which Lists to delete.
+     * 
+    **/
+    where: ListsWhereUniqueInput
+  }
+
+
+  /**
+   * Lists deleteMany
+   */
+  export type ListsDeleteManyArgs = {
+    /**
+     * Filter which Lists to delete
+     * 
+    **/
+    where?: ListsWhereInput
+  }
+
+
+  /**
+   * Lists.items
+   */
+  export type Lists$itemsArgs = {
+    /**
+     * Select specific fields to fetch from the Items
+     * 
+    **/
+    select?: ItemsSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ItemsInclude | null
+    where?: ItemsWhereInput
+    orderBy?: Enumerable<ItemsOrderByWithRelationInput>
+    cursor?: ItemsWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Enumerable<ItemsScalarFieldEnum>
+  }
+
+
+  /**
+   * Lists without action
+   */
+  export type ListsArgs = {
+    /**
+     * Select specific fields to fetch from the Lists
+     * 
+    **/
+    select?: ListsSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ListsInclude | null
   }
 
 
@@ -1739,10 +2876,20 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id: 'id',
     task: 'task',
     done: 'done',
-    created_at: 'created_at'
+    created_at: 'created_at',
+    list_id: 'list_id'
   };
 
   export type ItemsScalarFieldEnum = (typeof ItemsScalarFieldEnum)[keyof typeof ItemsScalarFieldEnum]
+
+
+  export const ListsScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    created_at: 'created_at'
+  };
+
+  export type ListsScalarFieldEnum = (typeof ListsScalarFieldEnum)[keyof typeof ListsScalarFieldEnum]
 
 
   export const QueryMode: {
@@ -1784,6 +2931,8 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     task?: StringFilter | string
     done?: BoolFilter | boolean
     created_at?: DateTimeFilter | Date | string
+    list_id?: UuidFilter | string
+    lists?: XOR<ListsRelationFilter, ListsWhereInput>
   }
 
   export type ItemsOrderByWithRelationInput = {
@@ -1791,6 +2940,8 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     task?: SortOrder
     done?: SortOrder
     created_at?: SortOrder
+    list_id?: SortOrder
+    lists?: ListsOrderByWithRelationInput
   }
 
   export type ItemsWhereUniqueInput = {
@@ -1802,6 +2953,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     task?: SortOrder
     done?: SortOrder
     created_at?: SortOrder
+    list_id?: SortOrder
     _count?: ItemsCountOrderByAggregateInput
     _max?: ItemsMaxOrderByAggregateInput
     _min?: ItemsMinOrderByAggregateInput
@@ -1815,6 +2967,46 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     task?: StringWithAggregatesFilter | string
     done?: BoolWithAggregatesFilter | boolean
     created_at?: DateTimeWithAggregatesFilter | Date | string
+    list_id?: UuidWithAggregatesFilter | string
+  }
+
+  export type ListsWhereInput = {
+    AND?: Enumerable<ListsWhereInput>
+    OR?: Enumerable<ListsWhereInput>
+    NOT?: Enumerable<ListsWhereInput>
+    id?: UuidFilter | string
+    name?: StringFilter | string
+    created_at?: DateTimeFilter | Date | string
+    items?: ItemsListRelationFilter
+  }
+
+  export type ListsOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    created_at?: SortOrder
+    items?: ItemsOrderByRelationAggregateInput
+  }
+
+  export type ListsWhereUniqueInput = {
+    id?: string
+  }
+
+  export type ListsOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    created_at?: SortOrder
+    _count?: ListsCountOrderByAggregateInput
+    _max?: ListsMaxOrderByAggregateInput
+    _min?: ListsMinOrderByAggregateInput
+  }
+
+  export type ListsScalarWhereWithAggregatesInput = {
+    AND?: Enumerable<ListsScalarWhereWithAggregatesInput>
+    OR?: Enumerable<ListsScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<ListsScalarWhereWithAggregatesInput>
+    id?: UuidWithAggregatesFilter | string
+    name?: StringWithAggregatesFilter | string
+    created_at?: DateTimeWithAggregatesFilter | Date | string
   }
 
   export type ItemsCreateInput = {
@@ -1822,6 +3014,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     task: string
     done: boolean
     created_at: Date | string
+    lists: ListsCreateNestedOneWithoutItemsInput
   }
 
   export type ItemsUncheckedCreateInput = {
@@ -1829,6 +3022,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     task: string
     done: boolean
     created_at: Date | string
+    list_id: string
   }
 
   export type ItemsUpdateInput = {
@@ -1836,6 +3030,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     task?: StringFieldUpdateOperationsInput | string
     done?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    lists?: ListsUpdateOneRequiredWithoutItemsNestedInput
   }
 
   export type ItemsUncheckedUpdateInput = {
@@ -1843,6 +3038,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     task?: StringFieldUpdateOperationsInput | string
     done?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    list_id?: StringFieldUpdateOperationsInput | string
   }
 
   export type ItemsCreateManyInput = {
@@ -1850,6 +3046,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     task: string
     done: boolean
     created_at: Date | string
+    list_id: string
   }
 
   export type ItemsUpdateManyMutationInput = {
@@ -1863,6 +3060,53 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id?: StringFieldUpdateOperationsInput | string
     task?: StringFieldUpdateOperationsInput | string
     done?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    list_id?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type ListsCreateInput = {
+    id: string
+    name: string
+    created_at: Date | string
+    items?: ItemsCreateNestedManyWithoutListsInput
+  }
+
+  export type ListsUncheckedCreateInput = {
+    id: string
+    name: string
+    created_at: Date | string
+    items?: ItemsUncheckedCreateNestedManyWithoutListsInput
+  }
+
+  export type ListsUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    items?: ItemsUpdateManyWithoutListsNestedInput
+  }
+
+  export type ListsUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    items?: ItemsUncheckedUpdateManyWithoutListsNestedInput
+  }
+
+  export type ListsCreateManyInput = {
+    id: string
+    name: string
+    created_at: Date | string
+  }
+
+  export type ListsUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ListsUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -1909,11 +3153,17 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     not?: NestedDateTimeFilter | Date | string
   }
 
+  export type ListsRelationFilter = {
+    is?: ListsWhereInput
+    isNot?: ListsWhereInput
+  }
+
   export type ItemsCountOrderByAggregateInput = {
     id?: SortOrder
     task?: SortOrder
     done?: SortOrder
     created_at?: SortOrder
+    list_id?: SortOrder
   }
 
   export type ItemsMaxOrderByAggregateInput = {
@@ -1921,6 +3171,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     task?: SortOrder
     done?: SortOrder
     created_at?: SortOrder
+    list_id?: SortOrder
   }
 
   export type ItemsMinOrderByAggregateInput = {
@@ -1928,6 +3179,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     task?: SortOrder
     done?: SortOrder
     created_at?: SortOrder
+    list_id?: SortOrder
   }
 
   export type UuidWithAggregatesFilter = {
@@ -1985,6 +3237,40 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     _max?: NestedDateTimeFilter
   }
 
+  export type ItemsListRelationFilter = {
+    every?: ItemsWhereInput
+    some?: ItemsWhereInput
+    none?: ItemsWhereInput
+  }
+
+  export type ItemsOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ListsCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type ListsMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type ListsMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type ListsCreateNestedOneWithoutItemsInput = {
+    create?: XOR<ListsCreateWithoutItemsInput, ListsUncheckedCreateWithoutItemsInput>
+    connectOrCreate?: ListsCreateOrConnectWithoutItemsInput
+    connect?: ListsWhereUniqueInput
+  }
+
   export type StringFieldUpdateOperationsInput = {
     set?: string
   }
@@ -1995,6 +3281,56 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
   export type DateTimeFieldUpdateOperationsInput = {
     set?: Date | string
+  }
+
+  export type ListsUpdateOneRequiredWithoutItemsNestedInput = {
+    create?: XOR<ListsCreateWithoutItemsInput, ListsUncheckedCreateWithoutItemsInput>
+    connectOrCreate?: ListsCreateOrConnectWithoutItemsInput
+    upsert?: ListsUpsertWithoutItemsInput
+    connect?: ListsWhereUniqueInput
+    update?: XOR<ListsUpdateWithoutItemsInput, ListsUncheckedUpdateWithoutItemsInput>
+  }
+
+  export type ItemsCreateNestedManyWithoutListsInput = {
+    create?: XOR<Enumerable<ItemsCreateWithoutListsInput>, Enumerable<ItemsUncheckedCreateWithoutListsInput>>
+    connectOrCreate?: Enumerable<ItemsCreateOrConnectWithoutListsInput>
+    createMany?: ItemsCreateManyListsInputEnvelope
+    connect?: Enumerable<ItemsWhereUniqueInput>
+  }
+
+  export type ItemsUncheckedCreateNestedManyWithoutListsInput = {
+    create?: XOR<Enumerable<ItemsCreateWithoutListsInput>, Enumerable<ItemsUncheckedCreateWithoutListsInput>>
+    connectOrCreate?: Enumerable<ItemsCreateOrConnectWithoutListsInput>
+    createMany?: ItemsCreateManyListsInputEnvelope
+    connect?: Enumerable<ItemsWhereUniqueInput>
+  }
+
+  export type ItemsUpdateManyWithoutListsNestedInput = {
+    create?: XOR<Enumerable<ItemsCreateWithoutListsInput>, Enumerable<ItemsUncheckedCreateWithoutListsInput>>
+    connectOrCreate?: Enumerable<ItemsCreateOrConnectWithoutListsInput>
+    upsert?: Enumerable<ItemsUpsertWithWhereUniqueWithoutListsInput>
+    createMany?: ItemsCreateManyListsInputEnvelope
+    set?: Enumerable<ItemsWhereUniqueInput>
+    disconnect?: Enumerable<ItemsWhereUniqueInput>
+    delete?: Enumerable<ItemsWhereUniqueInput>
+    connect?: Enumerable<ItemsWhereUniqueInput>
+    update?: Enumerable<ItemsUpdateWithWhereUniqueWithoutListsInput>
+    updateMany?: Enumerable<ItemsUpdateManyWithWhereWithoutListsInput>
+    deleteMany?: Enumerable<ItemsScalarWhereInput>
+  }
+
+  export type ItemsUncheckedUpdateManyWithoutListsNestedInput = {
+    create?: XOR<Enumerable<ItemsCreateWithoutListsInput>, Enumerable<ItemsUncheckedCreateWithoutListsInput>>
+    connectOrCreate?: Enumerable<ItemsCreateOrConnectWithoutListsInput>
+    upsert?: Enumerable<ItemsUpsertWithWhereUniqueWithoutListsInput>
+    createMany?: ItemsCreateManyListsInputEnvelope
+    set?: Enumerable<ItemsWhereUniqueInput>
+    disconnect?: Enumerable<ItemsWhereUniqueInput>
+    delete?: Enumerable<ItemsWhereUniqueInput>
+    connect?: Enumerable<ItemsWhereUniqueInput>
+    update?: Enumerable<ItemsUpdateWithWhereUniqueWithoutListsInput>
+    updateMany?: Enumerable<ItemsUpdateManyWithWhereWithoutListsInput>
+    deleteMany?: Enumerable<ItemsScalarWhereInput>
   }
 
   export type NestedUuidFilter = {
@@ -2100,6 +3436,119 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     _count?: NestedIntFilter
     _min?: NestedDateTimeFilter
     _max?: NestedDateTimeFilter
+  }
+
+  export type ListsCreateWithoutItemsInput = {
+    id: string
+    name: string
+    created_at: Date | string
+  }
+
+  export type ListsUncheckedCreateWithoutItemsInput = {
+    id: string
+    name: string
+    created_at: Date | string
+  }
+
+  export type ListsCreateOrConnectWithoutItemsInput = {
+    where: ListsWhereUniqueInput
+    create: XOR<ListsCreateWithoutItemsInput, ListsUncheckedCreateWithoutItemsInput>
+  }
+
+  export type ListsUpsertWithoutItemsInput = {
+    update: XOR<ListsUpdateWithoutItemsInput, ListsUncheckedUpdateWithoutItemsInput>
+    create: XOR<ListsCreateWithoutItemsInput, ListsUncheckedCreateWithoutItemsInput>
+  }
+
+  export type ListsUpdateWithoutItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ListsUncheckedUpdateWithoutItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ItemsCreateWithoutListsInput = {
+    id: string
+    task: string
+    done: boolean
+    created_at: Date | string
+  }
+
+  export type ItemsUncheckedCreateWithoutListsInput = {
+    id: string
+    task: string
+    done: boolean
+    created_at: Date | string
+  }
+
+  export type ItemsCreateOrConnectWithoutListsInput = {
+    where: ItemsWhereUniqueInput
+    create: XOR<ItemsCreateWithoutListsInput, ItemsUncheckedCreateWithoutListsInput>
+  }
+
+  export type ItemsCreateManyListsInputEnvelope = {
+    data: Enumerable<ItemsCreateManyListsInput>
+    skipDuplicates?: boolean
+  }
+
+  export type ItemsUpsertWithWhereUniqueWithoutListsInput = {
+    where: ItemsWhereUniqueInput
+    update: XOR<ItemsUpdateWithoutListsInput, ItemsUncheckedUpdateWithoutListsInput>
+    create: XOR<ItemsCreateWithoutListsInput, ItemsUncheckedCreateWithoutListsInput>
+  }
+
+  export type ItemsUpdateWithWhereUniqueWithoutListsInput = {
+    where: ItemsWhereUniqueInput
+    data: XOR<ItemsUpdateWithoutListsInput, ItemsUncheckedUpdateWithoutListsInput>
+  }
+
+  export type ItemsUpdateManyWithWhereWithoutListsInput = {
+    where: ItemsScalarWhereInput
+    data: XOR<ItemsUpdateManyMutationInput, ItemsUncheckedUpdateManyWithoutItemsInput>
+  }
+
+  export type ItemsScalarWhereInput = {
+    AND?: Enumerable<ItemsScalarWhereInput>
+    OR?: Enumerable<ItemsScalarWhereInput>
+    NOT?: Enumerable<ItemsScalarWhereInput>
+    id?: UuidFilter | string
+    task?: StringFilter | string
+    done?: BoolFilter | boolean
+    created_at?: DateTimeFilter | Date | string
+    list_id?: UuidFilter | string
+  }
+
+  export type ItemsCreateManyListsInput = {
+    id: string
+    task: string
+    done: boolean
+    created_at: Date | string
+  }
+
+  export type ItemsUpdateWithoutListsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    task?: StringFieldUpdateOperationsInput | string
+    done?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ItemsUncheckedUpdateWithoutListsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    task?: StringFieldUpdateOperationsInput | string
+    done?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ItemsUncheckedUpdateManyWithoutItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    task?: StringFieldUpdateOperationsInput | string
+    done?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 
