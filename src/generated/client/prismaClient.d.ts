@@ -17,7 +17,12 @@ type UnwrapTuple<Tuple extends readonly unknown[]> = {
  * 
  */
 export type Items = {
-  value: string
+  /**
+   * @zod.string.uuid()
+   */
+  id: string
+  task: string
+  done: boolean
 }
 
 
@@ -813,29 +818,41 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   }
 
   export type ItemsMinAggregateOutputType = {
-    value: string | null
+    id: string | null
+    task: string | null
+    done: boolean | null
   }
 
   export type ItemsMaxAggregateOutputType = {
-    value: string | null
+    id: string | null
+    task: string | null
+    done: boolean | null
   }
 
   export type ItemsCountAggregateOutputType = {
-    value: number
+    id: number
+    task: number
+    done: number
     _all: number
   }
 
 
   export type ItemsMinAggregateInputType = {
-    value?: true
+    id?: true
+    task?: true
+    done?: true
   }
 
   export type ItemsMaxAggregateInputType = {
-    value?: true
+    id?: true
+    task?: true
+    done?: true
   }
 
   export type ItemsCountAggregateInputType = {
-    value?: true
+    id?: true
+    task?: true
+    done?: true
     _all?: true
   }
 
@@ -918,7 +935,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
 
   export type ItemsGroupByOutputType = {
-    value: string
+    id: string
+    task: string
+    done: boolean
     _count: ItemsCountAggregateOutputType | null
     _min: ItemsMinAggregateOutputType | null
     _max: ItemsMaxAggregateOutputType | null
@@ -939,7 +958,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
 
 
   export type ItemsSelect = {
-    value?: boolean
+    id?: boolean
+    task?: boolean
+    done?: boolean
   }
 
 
@@ -1042,8 +1063,8 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
      * // Get first 10 Items
      * const items = await prisma.items.findMany({ take: 10 })
      * 
-     * // Only select the `value`
-     * const itemsWithValueOnly = await prisma.items.findMany({ select: { value: true } })
+     * // Only select the `id`
+     * const itemsWithIdOnly = await prisma.items.findMany({ select: { id: true } })
      * 
     **/
     findMany<T extends ItemsFindManyArgs>(
@@ -1706,7 +1727,9 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   // https://github.com/microsoft/TypeScript/issues/3192#issuecomment-261720275
 
   export const ItemsScalarFieldEnum: {
-    value: 'value'
+    id: 'id',
+    task: 'task',
+    done: 'done'
   };
 
   export type ItemsScalarFieldEnum = (typeof ItemsScalarFieldEnum)[keyof typeof ItemsScalarFieldEnum]
@@ -1747,19 +1770,25 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     AND?: Enumerable<ItemsWhereInput>
     OR?: Enumerable<ItemsWhereInput>
     NOT?: Enumerable<ItemsWhereInput>
-    value?: StringFilter | string
+    id?: UuidFilter | string
+    task?: StringFilter | string
+    done?: BoolFilter | boolean
   }
 
   export type ItemsOrderByWithRelationInput = {
-    value?: SortOrder
+    id?: SortOrder
+    task?: SortOrder
+    done?: SortOrder
   }
 
   export type ItemsWhereUniqueInput = {
-    value?: string
+    id?: string
   }
 
   export type ItemsOrderByWithAggregationInput = {
-    value?: SortOrder
+    id?: SortOrder
+    task?: SortOrder
+    done?: SortOrder
     _count?: ItemsCountOrderByAggregateInput
     _max?: ItemsMaxOrderByAggregateInput
     _min?: ItemsMinOrderByAggregateInput
@@ -1769,35 +1798,63 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     AND?: Enumerable<ItemsScalarWhereWithAggregatesInput>
     OR?: Enumerable<ItemsScalarWhereWithAggregatesInput>
     NOT?: Enumerable<ItemsScalarWhereWithAggregatesInput>
-    value?: StringWithAggregatesFilter | string
+    id?: UuidWithAggregatesFilter | string
+    task?: StringWithAggregatesFilter | string
+    done?: BoolWithAggregatesFilter | boolean
   }
 
   export type ItemsCreateInput = {
-    value: string
+    id: string
+    task: string
+    done: boolean
   }
 
   export type ItemsUncheckedCreateInput = {
-    value: string
+    id: string
+    task: string
+    done: boolean
   }
 
   export type ItemsUpdateInput = {
-    value?: StringFieldUpdateOperationsInput | string
+    id?: StringFieldUpdateOperationsInput | string
+    task?: StringFieldUpdateOperationsInput | string
+    done?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type ItemsUncheckedUpdateInput = {
-    value?: StringFieldUpdateOperationsInput | string
+    id?: StringFieldUpdateOperationsInput | string
+    task?: StringFieldUpdateOperationsInput | string
+    done?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type ItemsCreateManyInput = {
-    value: string
+    id: string
+    task: string
+    done: boolean
   }
 
   export type ItemsUpdateManyMutationInput = {
-    value?: StringFieldUpdateOperationsInput | string
+    id?: StringFieldUpdateOperationsInput | string
+    task?: StringFieldUpdateOperationsInput | string
+    done?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type ItemsUncheckedUpdateManyInput = {
-    value?: StringFieldUpdateOperationsInput | string
+    id?: StringFieldUpdateOperationsInput | string
+    task?: StringFieldUpdateOperationsInput | string
+    done?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type UuidFilter = {
+    equals?: string
+    in?: Enumerable<string>
+    notIn?: Enumerable<string>
+    lt?: string
+    lte?: string
+    gt?: string
+    gte?: string
+    mode?: QueryMode
+    not?: NestedUuidFilter | string
   }
 
   export type StringFilter = {
@@ -1815,16 +1872,42 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     not?: NestedStringFilter | string
   }
 
+  export type BoolFilter = {
+    equals?: boolean
+    not?: NestedBoolFilter | boolean
+  }
+
   export type ItemsCountOrderByAggregateInput = {
-    value?: SortOrder
+    id?: SortOrder
+    task?: SortOrder
+    done?: SortOrder
   }
 
   export type ItemsMaxOrderByAggregateInput = {
-    value?: SortOrder
+    id?: SortOrder
+    task?: SortOrder
+    done?: SortOrder
   }
 
   export type ItemsMinOrderByAggregateInput = {
-    value?: SortOrder
+    id?: SortOrder
+    task?: SortOrder
+    done?: SortOrder
+  }
+
+  export type UuidWithAggregatesFilter = {
+    equals?: string
+    in?: Enumerable<string>
+    notIn?: Enumerable<string>
+    lt?: string
+    lte?: string
+    gt?: string
+    gte?: string
+    mode?: QueryMode
+    not?: NestedUuidWithAggregatesFilter | string
+    _count?: NestedIntFilter
+    _min?: NestedStringFilter
+    _max?: NestedStringFilter
   }
 
   export type StringWithAggregatesFilter = {
@@ -1845,8 +1928,31 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     _max?: NestedStringFilter
   }
 
+  export type BoolWithAggregatesFilter = {
+    equals?: boolean
+    not?: NestedBoolWithAggregatesFilter | boolean
+    _count?: NestedIntFilter
+    _min?: NestedBoolFilter
+    _max?: NestedBoolFilter
+  }
+
   export type StringFieldUpdateOperationsInput = {
     set?: string
+  }
+
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
+  }
+
+  export type NestedUuidFilter = {
+    equals?: string
+    in?: Enumerable<string>
+    notIn?: Enumerable<string>
+    lt?: string
+    lte?: string
+    gt?: string
+    gte?: string
+    not?: NestedUuidFilter | string
   }
 
   export type NestedStringFilter = {
@@ -1861,6 +1967,36 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     startsWith?: string
     endsWith?: string
     not?: NestedStringFilter | string
+  }
+
+  export type NestedBoolFilter = {
+    equals?: boolean
+    not?: NestedBoolFilter | boolean
+  }
+
+  export type NestedUuidWithAggregatesFilter = {
+    equals?: string
+    in?: Enumerable<string>
+    notIn?: Enumerable<string>
+    lt?: string
+    lte?: string
+    gt?: string
+    gte?: string
+    not?: NestedUuidWithAggregatesFilter | string
+    _count?: NestedIntFilter
+    _min?: NestedStringFilter
+    _max?: NestedStringFilter
+  }
+
+  export type NestedIntFilter = {
+    equals?: number
+    in?: Enumerable<number>
+    notIn?: Enumerable<number>
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedIntFilter | number
   }
 
   export type NestedStringWithAggregatesFilter = {
@@ -1880,15 +2016,12 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     _max?: NestedStringFilter
   }
 
-  export type NestedIntFilter = {
-    equals?: number
-    in?: Enumerable<number>
-    notIn?: Enumerable<number>
-    lt?: number
-    lte?: number
-    gt?: number
-    gte?: number
-    not?: NestedIntFilter | number
+  export type NestedBoolWithAggregatesFilter = {
+    equals?: boolean
+    not?: NestedBoolWithAggregatesFilter | boolean
+    _count?: NestedIntFilter
+    _min?: NestedBoolFilter
+    _max?: NestedBoolFilter
   }
 
 
