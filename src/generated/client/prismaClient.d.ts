@@ -23,6 +23,7 @@ export type Items = {
   id: string
   task: string
   done: boolean
+  created_at: Date
 }
 
 
@@ -821,18 +822,21 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id: string | null
     task: string | null
     done: boolean | null
+    created_at: Date | null
   }
 
   export type ItemsMaxAggregateOutputType = {
     id: string | null
     task: string | null
     done: boolean | null
+    created_at: Date | null
   }
 
   export type ItemsCountAggregateOutputType = {
     id: number
     task: number
     done: number
+    created_at: number
     _all: number
   }
 
@@ -841,18 +845,21 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id?: true
     task?: true
     done?: true
+    created_at?: true
   }
 
   export type ItemsMaxAggregateInputType = {
     id?: true
     task?: true
     done?: true
+    created_at?: true
   }
 
   export type ItemsCountAggregateInputType = {
     id?: true
     task?: true
     done?: true
+    created_at?: true
     _all?: true
   }
 
@@ -938,6 +945,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id: string
     task: string
     done: boolean
+    created_at: Date
     _count: ItemsCountAggregateOutputType | null
     _min: ItemsMinAggregateOutputType | null
     _max: ItemsMaxAggregateOutputType | null
@@ -961,6 +969,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id?: boolean
     task?: boolean
     done?: boolean
+    created_at?: boolean
   }
 
 
@@ -1729,7 +1738,8 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export const ItemsScalarFieldEnum: {
     id: 'id',
     task: 'task',
-    done: 'done'
+    done: 'done',
+    created_at: 'created_at'
   };
 
   export type ItemsScalarFieldEnum = (typeof ItemsScalarFieldEnum)[keyof typeof ItemsScalarFieldEnum]
@@ -1773,12 +1783,14 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id?: UuidFilter | string
     task?: StringFilter | string
     done?: BoolFilter | boolean
+    created_at?: DateTimeFilter | Date | string
   }
 
   export type ItemsOrderByWithRelationInput = {
     id?: SortOrder
     task?: SortOrder
     done?: SortOrder
+    created_at?: SortOrder
   }
 
   export type ItemsWhereUniqueInput = {
@@ -1789,6 +1801,7 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id?: SortOrder
     task?: SortOrder
     done?: SortOrder
+    created_at?: SortOrder
     _count?: ItemsCountOrderByAggregateInput
     _max?: ItemsMaxOrderByAggregateInput
     _min?: ItemsMinOrderByAggregateInput
@@ -1801,48 +1814,56 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     id?: UuidWithAggregatesFilter | string
     task?: StringWithAggregatesFilter | string
     done?: BoolWithAggregatesFilter | boolean
+    created_at?: DateTimeWithAggregatesFilter | Date | string
   }
 
   export type ItemsCreateInput = {
     id: string
     task: string
     done: boolean
+    created_at: Date | string
   }
 
   export type ItemsUncheckedCreateInput = {
     id: string
     task: string
     done: boolean
+    created_at: Date | string
   }
 
   export type ItemsUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     task?: StringFieldUpdateOperationsInput | string
     done?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ItemsUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     task?: StringFieldUpdateOperationsInput | string
     done?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ItemsCreateManyInput = {
     id: string
     task: string
     done: boolean
+    created_at: Date | string
   }
 
   export type ItemsUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     task?: StringFieldUpdateOperationsInput | string
     done?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ItemsUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     task?: StringFieldUpdateOperationsInput | string
     done?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type UuidFilter = {
@@ -1877,22 +1898,36 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     not?: NestedBoolFilter | boolean
   }
 
+  export type DateTimeFilter = {
+    equals?: Date | string
+    in?: Enumerable<Date> | Enumerable<string>
+    notIn?: Enumerable<Date> | Enumerable<string>
+    lt?: Date | string
+    lte?: Date | string
+    gt?: Date | string
+    gte?: Date | string
+    not?: NestedDateTimeFilter | Date | string
+  }
+
   export type ItemsCountOrderByAggregateInput = {
     id?: SortOrder
     task?: SortOrder
     done?: SortOrder
+    created_at?: SortOrder
   }
 
   export type ItemsMaxOrderByAggregateInput = {
     id?: SortOrder
     task?: SortOrder
     done?: SortOrder
+    created_at?: SortOrder
   }
 
   export type ItemsMinOrderByAggregateInput = {
     id?: SortOrder
     task?: SortOrder
     done?: SortOrder
+    created_at?: SortOrder
   }
 
   export type UuidWithAggregatesFilter = {
@@ -1936,12 +1971,30 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     _max?: NestedBoolFilter
   }
 
+  export type DateTimeWithAggregatesFilter = {
+    equals?: Date | string
+    in?: Enumerable<Date> | Enumerable<string>
+    notIn?: Enumerable<Date> | Enumerable<string>
+    lt?: Date | string
+    lte?: Date | string
+    gt?: Date | string
+    gte?: Date | string
+    not?: NestedDateTimeWithAggregatesFilter | Date | string
+    _count?: NestedIntFilter
+    _min?: NestedDateTimeFilter
+    _max?: NestedDateTimeFilter
+  }
+
   export type StringFieldUpdateOperationsInput = {
     set?: string
   }
 
   export type BoolFieldUpdateOperationsInput = {
     set?: boolean
+  }
+
+  export type DateTimeFieldUpdateOperationsInput = {
+    set?: Date | string
   }
 
   export type NestedUuidFilter = {
@@ -1972,6 +2025,17 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
   export type NestedBoolFilter = {
     equals?: boolean
     not?: NestedBoolFilter | boolean
+  }
+
+  export type NestedDateTimeFilter = {
+    equals?: Date | string
+    in?: Enumerable<Date> | Enumerable<string>
+    notIn?: Enumerable<Date> | Enumerable<string>
+    lt?: Date | string
+    lte?: Date | string
+    gt?: Date | string
+    gte?: Date | string
+    not?: NestedDateTimeFilter | Date | string
   }
 
   export type NestedUuidWithAggregatesFilter = {
@@ -2022,6 +2086,20 @@ export type InputJsonValue = null | string | number | boolean | InputJsonObject 
     _count?: NestedIntFilter
     _min?: NestedBoolFilter
     _max?: NestedBoolFilter
+  }
+
+  export type NestedDateTimeWithAggregatesFilter = {
+    equals?: Date | string
+    in?: Enumerable<Date> | Enumerable<string>
+    notIn?: Enumerable<Date> | Enumerable<string>
+    lt?: Date | string
+    lte?: Date | string
+    gt?: Date | string
+    gte?: Date | string
+    not?: NestedDateTimeWithAggregatesFilter | Date | string
+    _count?: NestedIntFilter
+    _min?: NestedDateTimeFilter
+    _max?: NestedDateTimeFilter
   }
 
 
