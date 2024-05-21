@@ -19,6 +19,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@electric-sql/pglite": "^0.1.5",
     "electric-sql": "^0.11.4-canary.875200b",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
